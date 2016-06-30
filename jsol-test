@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="SHIFT_JIS"?>
+
+<web-app version="2.5" 	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+		http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+  <display-name>SecurePod2.0 Application</display-name>
+
+    <listener>
+        <listener-class>org.apache.axis.transport.http.AxisHTTPSessionListener</listener-class>
+    </listener>
+ 
+   <!-- Servlet Filter -->
+  <filter>
+    <filter-name>AccessFilter</filter-name>
+    <filter-class>jp.co.nttdata.securepod.common.accessfilter.AccessFilterEx</filter-class>
+  </filter>
+   <filter-mapping>
+   <filter-name>AccessFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <servlet>
+    <display-name>Apache-Axis Servlet</display-name>
+    <servlet-name>AxisServlet</servlet-name>
+    <servlet-class>
+        org.apache.axis.transport.http.AxisServlet
+    </servlet-class>
+  </servlet>
+  
+  <servlet>
+    <display-name>Axis Admin Servlet</display-name>
+    <servlet-name>AdminServlet</servlet-name>
+    <servlet-class>
+        org.apache.axis.transport.http.AdminServlet
+    </servlet-class>
+    <load-on-startup>100</load-on-startup>
+  </servlet>
+
+  <servlet>
+    <display-name>SOAPMonitorService</display-name>
+    <servlet-name>SOAPMonitorService</servlet-name>
+    <servlet-class>
+        org.apache.axis.monitor.SOAPMonitorService
+    </servlet-class>
+    <init-param>
+      <param-name>SOAPMonitorPort</param-name>
+      <param-value>5001</param-value>
+    </init-param>
+    <load-on-startup>100</load-on-startup>
+  </servlet>
+
+  <servlet>
+    <servlet-name>action</servlet-name>
+    <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+    <init-param>
+      <param-name>config</param-name>
+      <param-value>
+      /WEB-INF/struts-config.xml,
+      /WEB-INF/common/struts-config.xml,
+      /WEB-INF/contract/struts-config.xml
+      </param-value>
+    </init-param>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>2</param-value>
+    </init-param>
+    <init-param>
+      <param-name>detail</param-name>
+      <param-value>2</param-value>
+    </init-param>
+    <load-on-startup>3</load-on-startup>
+  </servlet>
+
+   <!-- XML�t�@�C�������[�h���� -->
+   <servlet>
+    <servlet-name>LoadConfigFileServlet</servlet-name>
+    <servlet-class>jp.co.nttdata.securepod.ffs.utils.LoadConfigFileServlet</servlet-class>
+    <init-param>
+      <param-name>init-xml-file</param-name>
+      <param-value>/WEB-INF/allServiceConfig.xml</param-value>
+    </init-param>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+
+  <!-- ���O�̏��� -->
+  <servlet>
+    <servlet-name>Log4j-init</servlet-name>
+    <servlet-class>jp.co.nttdata.securepod.ffs.log.Log4jInit</servlet-class>
+    <init-param>
+      <param-name>Log4j-init-file</param-name>
+      <param-value>/WEB-INF/log4j.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <!-- �����[�����MServlet -->
+  <servlet>
+    <description></description>
+    <display-name>MailUrgeServlet</display-name>
+  	<servlet-name>MailUrgeServlet</servlet-name>
+  	<servlet-class>jp.co.nttdata.securepod.web.contract.batch.MailUrgeServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <description></description>
+    <display-name>FurikomiSearchServlet</display-name>
+  	<servlet-name>FurikomiSearchServlet</servlet-name>
+  	<servlet-class>jp.co.nttdata.securepod.web.contract.batch.FurikomiSearchServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <description></description>
+    <display-name>dummy</display-name>
+  	<servlet-name>dummy</servlet-name>
+  	<jsp-file>/pages/common/dummy.jsp</jsp-file>
+  </servlet>
+  
+  <!-- Standard Action Servlet Mapping -->
+  <servlet-mapping>
+    <servlet-name>action</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>AxisServlet</servlet-name>
+    <url-pattern>/servlet/AxisServlet</url-pattern>
+  </servlet-mapping>
+   
+  <servlet-mapping>
+    <servlet-name>AxisServlet</servlet-name>
+    <url-pattern>*.jws</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>AxisServlet</servlet-name>
+    <url-pattern>/services/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>SOAPMonitorService</servlet-name>
+    <url-pattern>/SOAPMonitor</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>MailUrgeServlet</servlet-name>
+    <url-pattern>/MailUrgeServlet</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>FurikomiSearchServlet</servlet-name>
+    <url-pattern>/FurikomiSearchServlet</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>dummy</servlet-name>
+    <url-pattern>/dummy</url-pattern>
+  </servlet-mapping>
+
+  <welcome-file-list>
+    <welcome-file>/common/WCHL01.do</welcome-file>
+  </welcome-file-list>
+
+  <!-- �R���e�i�ُ폈�� -->
+ <error-page>
+   <exception-type>javax.servlet.ServletException</exception-type>
+   <location>/pages/common/WCCE03.jsp</location>
+ </error-page>
+
+ <error-page>
+   <exception-type>java.lang.Throwable</exception-type>
+   <location>/pages/common/WCCE03.jsp</location>
+ </error-page>
+
+ <error-page>
+   <exception-type>javax.servlet.jsp.JspException</exception-type>
+   <location>/pages/common/WCCE03.jsp</location>
+ </error-page>
+
+  <!-- Struts Tag Library Descriptors -->
+  <jsp-config>
+  <taglib>
+    <taglib-uri>/tags/struts-bean</taglib-uri>
+    <taglib-location>/WEB-INF/struts-bean.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>/tags/struts-html</taglib-uri>
+    <taglib-location>/WEB-INF/struts-html.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>/tags/struts-logic</taglib-uri>
+    <taglib-location>/WEB-INF/struts-logic.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>/tags/struts-nested</taglib-uri>
+    <taglib-location>/WEB-INF/struts-nested.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>/tags/hosoku</taglib-uri>
+    <taglib-location>/WEB-INF/hosoku.tld</taglib-location>
+  </taglib>
+  
+  <taglib>
+    <taglib-uri>/tags/date</taglib-uri>
+    <taglib-location>/WEB-INF/date.tld</taglib-location>
+  </taglib>
+  </jsp-config>
+  
+  <session-config>
+    <session-timeout>60</session-timeout>
+  </session-config>
+    <!-- currently the W3C havent settled on a media type for WSDL;
+    http://www.w3.org/TR/2003/WD-wsdl12-20030303/#ietf-draft
+    for now we go with the basic 'it's XML' response -->
+  <mime-mapping>
+    <extension>wsdl</extension>
+     <mime-type>text/xml</mime-type>
+  </mime-mapping>
+  
+  <mime-mapping>
+    <extension>xsd</extension>
+    <mime-type>text/xml</mime-type>
+  </mime-mapping>
+
+</web-app>
